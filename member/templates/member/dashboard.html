@@ -1,0 +1,46 @@
+{% extends "[BASE]ALL.html"%}
+
+{% block app_css %}
+<style>
+</style>
+{% endblock %}
+
+{% block app_title %}
+<div class="d-flex align-items-center justify-content-between">
+    <h3>會員前端頁面</h3>
+</div>
+{% endblock %}
+
+{% block app_content %}
+<div class="container">
+    <h1>歡迎回來，{{ user.user_name }}!</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <h2>個人資料</h2>
+            <p>電子郵箱: {{ user.user_email }}</p>
+            <p>生日: {{ user.user_birth }}</p>
+            <p>暱稱: {{ user.user_nickname }}</p>
+        </div>
+        <div class="col-md-6">
+            <h2>最近活动</h2>
+            <p>最近一次登入時間: {{ user.last_login }}</p>
+            <p>最近一次購買時間: {{ user.last_purchase_date }}</p>
+            <p>最近一次購買商品: {{ user.last_purchase_item }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="container d-grid gap-2 col-2 mx-auto">
+    <a class="btn app-btn-primary" href="{% url 'member:logout' %}" onclick="return confirm('確定要登出嗎？');">登出</a>
+</div>
+{% endblock %}
+
+{% block app_js %}
+<script>
+    function logout() {
+        if (confirm('確定要登出嗎？')) {
+            window.location.href = "{% url 'member:logout' %}";
+        }
+    }
+</script>
+{% endblock %}
