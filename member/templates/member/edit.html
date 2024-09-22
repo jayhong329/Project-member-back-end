@@ -26,7 +26,7 @@
         </div>
         <div class="mb-3">
             <label for="userphone" class="form-label">手機</label>
-            <input type="number" class="form-control" name="userphone" value="{{member.user_phone}}" disabled>
+            <input type="number" class="form-control" name="userphone" value="{{member.user_phone}}">
         </div>
         <div class="mb-3">
             <label for="useremail" class="form-label">電子郵箱</label>
@@ -58,7 +58,7 @@
         <!-- 修改生日時，要記得用 filter 轉換  | date:'Y-m-d'   以便顯示!! -->
         <div class="mb-3">
             <label for="userbirth" class="form-label">生日</label>
-            <input type="date" class="form-control" name="userbirth" value="{{member.user_birth | date:'Y-m-d' }}" disabled>
+            <input type="date" class="form-control" name="userbirth" value="{{member.user_birth | date:'Y-m-d' }}">
         </div>
         <!-- 修改大頭照時，記得用 MEDIA_URL 找到資料庫名稱   以便顯示圖像!! -->
         <div class="mb-3">

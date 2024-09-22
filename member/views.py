@@ -1,14 +1,9 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password, check_password
-from django.http import HttpResponse, JsonResponse
 from api_member.models import MemberBasic, MemberVerify, MemberPrivacy
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from django.contrib import messages
-from django.template.loader import render_to_string
-from django.utils.crypto import get_random_string
-from django.utils import timezone
-from datetime import timedelta
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_date
@@ -39,10 +34,11 @@ def edit(request):
     if request.method == "POST":
         # 接收使用者上傳的資料
         name = request.POST.get('username')
+        phone = request.POST.get('userphone')
+        email = request.POST.get("useremail")
         nickname = request.POST.get('usernickname')
         gender = request.POST.get('usergender')
         birth = request.POST.get('userbirth')
-        email = request.POST.get("useremail")
         vip_status = request.POST.get("vip_status","0")
 
         # 接收上傳的檔案
@@ -66,10 +62,11 @@ def edit(request):
 
         # 修改到資料庫
         member.user_name = name
+        member.user_phone = phone
+        member.user_email = email
         member.user_nickname = nickname
         member.user_gender = gender
         member.user_birth = birth
-        member.user_email = email
         member.vip_status = vip_status
 
         if upload_file:
@@ -103,15 +100,17 @@ def delete(request, id):
     except MemberBasic.DoesNotExist:
         messages.error(request, "未找到指定的用戶。")
     except Exception as e:
-        messages.error(request, f"刪除過程中發生錯誤：{str(e)}")
+        messages.error(request, f"刪除過程發生錯誤：{str(e)}")
 
     return redirect('member:index')
 
 # 5. 後台-手動發送驗證信(總覽)
 def hand_verify(request):
-    id = request.GET.get("id", 1)
-    member = MemberBasic.objects.get(user_id=id)
-    return render(request, "member/hand_verify.html", {"title": "手動發驗證碼"})
+    id = request.GET.get("id")
+    member = None
+    if id:
+        member = MemberBasic.objects.filter(user_id=id).first()
+    return render(request, "member/hand_verify.html", {"title": "手動發驗證碼", "member": member})
 
 # 1.2 後台-用戶個人資料頁面(總覽)
 def personal(request):
@@ -127,9 +126,6 @@ def reset(request):
 # 前台-用戶忘記密碼 2. 發送驗證碼
 def reset_confirm(request):
     return render(request, "member/reset_confirm.html", {"title": "忘記密碼-輸入驗證碼"})
-
-
-
 
 
 # 前台-用戶修改郵箱 1. 輸入電子郵箱
@@ -149,11 +145,9 @@ def email_change_confirm(request, uidb64, token):
     else:
         return render(request, 'member/email_change_confirm.html')
 
-
 # 後台-用戶修改郵箱 1. 輸入電子郵箱，發送驗證碼
 def email_reconfirm(request, token):
     return render(request, "member/email_reconfirm.html", {"title": "修改郵箱-發送驗證碼"})
-
 
 
 # 前台-用戶修改手機 1. 輸入手機
@@ -164,14 +158,9 @@ def phone_change(request):
 def phone_change_confirm(request, uidb64, token):
     return render(request, "member/phone_change_confirm.html", {"title": "修改手機-發送驗證碼"})
 
-
 # 後台-用戶修改手機 1. 輸入手機，發送驗證碼
 def phone_reconfirm(request, token):
     return render(request, "member/phone_reconfirm.html", {"title": "修改手機-發送驗證碼"})
-
-
-
-
 
 
 
@@ -222,15 +211,25 @@ def login(request):
 
 # 前台-用戶登出
 def logout(request):
+    # 獲取 session key
+    session_key = request.COOKIES.get('user_session')
+    
+    # 清除緩存中的用户信息
+    if session_key:
+        cache.delete(session_key)
+    
     # 清除 session 中的數據
-    request.session.clear()
+    request.session.flush()
     
     # 創建響應對象
     response = redirect('member:login')
     
     # 清除 cookie 中的數據
+    response.delete_cookie("user_session")
     response.delete_cookie("user_email")
     response.delete_cookie("remember_me")
+    
+    messages.success(request, "您已成功登出。")
     
     return response
 
@@ -251,6 +250,7 @@ def check_auth(request):
 # 前台-用戶登入後的頁面 (簡易版)
 def dashboard(request):
     if not check_auth(request):
+        messages.warning(request, "您尚未登入或登入已過期，請重新登入。")
         return redirect('member:login')
     
     # 獲取用戶信息
