@@ -37,8 +37,12 @@ urlpatterns = [
     path('reset_confirm/', views.reset_confirm, name='reset_confirm'),
     # http://127.0.0.1:8000/api_member/email_change/
     path('email_change/', views.email_change, name='email_change'),
-    # http://127.0.0.1:8000/api_member/email_change_confirm/
+    # http://127.0.0.1:8000/api_member/email_change_confirm/<str:token>/
     path('email_change_confirm/<str:token>/', views.email_change_confirm, name='email_change_confirm'),
+    # http://127.0.0.1:8000/api_member/email_change_form/
+    path('email_change_form/<str:code>/', views.email_change_form, name='email_change_form'),
+
+    
     # http://127.0.0.1:8000/api_member/verify-email/
     path('verify-email/<str:token>/', views.verify_email, name='verify_email'),
 
@@ -58,5 +62,7 @@ urlpatterns = [
     path('phone_change/', views.phone_change, name='phone_change'),
     # http://127.0.0.1:8000/api_member/phone_change_confirm/<str:token>/
     path('phone_change_confirm/<str:token>/', views.phone_change_confirm, name='phone_change_confirm'),
+    # http://127.0.0.1:8000/api_member/phone_change_form/<str:code>/
+    path('phone_change_form/<str:code>/', views.phone_change_form, name='phone_change_form'),
 
 ]

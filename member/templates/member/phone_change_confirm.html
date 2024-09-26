@@ -32,23 +32,19 @@
 					
 					<h2 class="auth-heading text-center mb-4">Phone Num Reset／手機號重設</h2>
 
-					<div class="auth-intro mb-4 text-center">請於下方輸入您的新手機，以便為您重設。<br>
-						Enter your new phone number below.<br> We'll reset you a new phone number.</div>
+					<div class="auth-intro mb-4 text-center">請輸入您收到的驗證碼以繼續。<br>
+						Enter the verification code you received below.</div>
 					<div class="auth-form-container text-left">
 						
 						<form class="auth-form resetpass-form" id="resetPhoneForm" action="{% url 'api_member:phone_change_confirm' token %}" method="POST">
 							{% csrf_token %}                  
 							<div class="email mb-3">
-								<input type="hidden" id="emailInput" name="email" value="{{ email }}">
-								<label class="sr-only" for="InputPhone">新手機：</label>
-								<input id="InputPhone" name="phone" type="tel" class="form-control login-phone" placeholder="新手機" required>
-								<label class="sr-only" for="PasswordCheck">密碼：</label>
-								<input id="PasswordCheck" name="password" type="password" class="form-control login-password" placeholder="密碼" minlength="8" required>
-
+								<label class="sr-only" for="VerificationCode">驗證碼：</label>
+								<input id="VerificationCode" name="verification_code" type="text" class="form-control" placeholder="請輸入驗證碼" required>
 								<div id="phoneHelp" class="alert alert-warning" style="display: none;"></div>
 							</div><!--//form-group-->
 							<div class="text-center">
-								<button type="submit" id="submitCheck" class="btn app-btn-primary btn-block theme-btn mx-auto">確認修改手機</button>
+								<button type="submit" id="submitCheck" class="btn app-btn-primary btn-block theme-btn mx-auto">確認驗證碼</button>
 							</div>
 						</form>
 
@@ -89,17 +85,13 @@
 	<script>
 		const resetPhoneForm = document.querySelector('#resetPhoneForm');
 		const messageDiv = document.querySelector('#message');
-		const inputPhone = document.querySelector('#InputPhone');
-		const passwordCheck = document.querySelector('#PasswordCheck');
+		const verificationCodeInput = document.querySelector('#VerificationCode');
 		const phoneHelp = document.querySelector('#phoneHelp');
-		const emailInput = document.querySelector('#emailInput');
 
 		resetPhoneForm.addEventListener('submit', async function(e) {
 			e.preventDefault();
 
-			const newPhone = inputPhone.value;
-			const password = passwordCheck.value;
-			const email = emailInput.value;
+			const verificationCode = verificationCodeInput.value;
 
 			try {
 				const response = await fetch('{% url "api_member:phone_change_confirm" token %}', {
@@ -109,9 +101,7 @@
 						'X-CSRFToken': '{{ csrf_token }}'
 					},
 					body: JSON.stringify({
-						phone: newPhone,
-						password: password,
-						email: email
+						verification_code: verificationCode
 					})
 				});
 
@@ -121,9 +111,8 @@
 				messageDiv.className = 'alert ' + (data.status === 'success' ? 'alert-success' : 'alert-danger');
 
 				if (data.status === 'success') {
-					setTimeout(() => {
-						window.location.href = '{% url "member:login" %}';
-					}, 5000);
+					// 跳轉到修改手機頁面
+					window.location.href = data.redirect_url;  // 使用返回的 URL 進行跳轉
 				}
 			} catch (error) {
 				console.error('Error:', error);
