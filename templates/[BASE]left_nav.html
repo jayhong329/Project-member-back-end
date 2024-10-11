@@ -4,7 +4,7 @@
     <div class="sidepanel-inner d-flex flex-column">
         <a href="#" id="sidepanel-close" class="sidepanel-close d-xl-none">&times;</a>
         <div class="app-branding">
-            <a class="app-logo" href="{% url 'index' %}"><img class="logo-icon me-2" src="{% static 'images/app-logo.svg' %}" alt="logo"><span class="logo-text">ACGN 專題後台</span></a>
+            <a class="app-logo" href="{% url 'admins:index' %}"><img class="logo-icon me-2" src="{% static 'images/app-logo.svg' %}" alt="logo"><span class="logo-text">ACGN 後台管理頁面</span></a>
 
         </div><!--//app-branding-->  
         
@@ -12,7 +12,7 @@
             <ul class="app-menu list-unstyled accordion" id="menu-accordion">
                 <li class="nav-item">
                     <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-                    <a class="nav-link active" href="{% url 'render_template' template_name='[BASE]ALL' %}">
+                    <a class="nav-link active" href="{% url 'admins:index' %}">
                         <span class="nav-icon">
                         <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-house-door" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
   <path fill-rule="evenodd" d="M7.646 1.146a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 .146.354v7a.5.5 0 0 1-.5.5H9.5a.5.5 0 0 1-.5-.5v-4H7v4a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .146-.354l6-6zM2.5 7.707V14H6v-4a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v4h3.5V7.707L8 2.207l-5.5 5.5z"/>
@@ -160,16 +160,18 @@
                     </a><!--//nav-link-->
                     <div id="submenu-5" class="collapse submenu submenu-5" data-bs-parent="#menu-accordion">
                         <ul class="submenu-list list-unstyled">
-                            <li class="submenu-item"><a class="submenu-link" href="{% url 'member:index' %}">會員資料總覽</a></li>
-                            <li class="submenu-item"><a class="submenu-link" href="{% url 'member:create' %}">手動新增資料</a></li>
-                            <!-- <li class="submenu-item"><a class="submenu-link" href="{% url 'member:edit' %}">修改會員資料</a></li> -->
-                            <li class="submenu-item"><a class="submenu-link" href="{% url 'member:hand_verify' %}">手動發送驗證信</a></li>
+                            <li class="submenu-item"><a class="submenu-link" href="{% url 'member:index' %}">用戶資料總覽</a></li>
+                            <li class="submenu-item"><a class="submenu-link" href="{% url 'member:create' %}">新增用戶資料</a></li>
+                            <li class="submenu-item"><a class="submenu-link" href="{% url 'member:hand_verify' %}">發送用戶驗證信</a></li>
+                            <li class="submenu-item"><a class="submenu-link" href="{% url 'admins:login' %}">管理者登入頁面</a></li>
+                            <li class="submenu-item"><a class="submenu-link" href="{% url 'admins:signup' %}">管理者註冊頁面</a></li>
+                            <li class="submenu-item"><a class="submenu-link" href="{% url 'admins:reset' %}">管理者重置密碼</a></li>
                             <li class="submenu-item"><a class="submenu-link" href="{% url 'member:login' %}">用戶登入頁面</a></li>
                             <li class="submenu-item"><a class="submenu-link" href="{% url 'member:signup' %}">用戶註冊頁面</a></li>
                             <li class="submenu-item"><a class="submenu-link" href="{% url 'member:reset' %}">用戶重置密碼</a></li>
                             <li class="submenu-item"><a class="submenu-link" href="{% url 'member:email_change' %}">用戶修改郵箱</a></li>
                             <li class="submenu-item"><a class="submenu-link" href="{% url 'member:phone_change' %}">用戶修改手機</a></li>
-                            <li class="submenu-item"><a class="submenu-link" href="{% url 'render_template' template_name='404' %}">404 page</a></li>
+                            <li class="submenu-item"><a class="submenu-link" href="{% url 'member:404' %}">用戶 404 page</a></li>
                         </ul>
                     </div>
                     </li><!--//nav-item-->

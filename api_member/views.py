@@ -7,14 +7,16 @@ from django.contrib import messages
 from django.conf import settings
 from django.core.mail import EmailMessage
 from django.core.mail import send_mail
+from django.core.cache import cache
 from django.urls import reverse
 from django.utils import timezone
-from .models import MemberBasic, MemberVerify, MemberPrivacy
+from .models import MemberBasic, MemberVerify, MemberPrivacy, AuthUser
 from django.utils.crypto import get_random_string
 import random
 from django.db.models import Q
 import json
 from django.db import transaction
+from django.contrib.auth import authenticate, login
 
 
 # Create your views here.
@@ -223,7 +225,6 @@ def checkpassword(request):
     return JsonResponse(result, safe=False)
 
 
-
 # 前後台-用戶忘記密碼 1.發驗證信
 def send_reset_email(request):
     if request.method == 'GET':
@@ -278,7 +279,7 @@ def request_verification(request):
             )
             
             send_verification_email(email_address, verify_code)
-            return JsonResponse({"message": "重置密碼-驗證信已發送，請提醒用戶留意郵箱。"}, status=200)
+            return JsonResponse({"message": "重置密碼-驗證信已發送，請留意註冊郵箱。"}, status=200)
         else:
             return JsonResponse({"message": "請確認信箱是否輸入正確"}, status=404)
         
@@ -288,7 +289,7 @@ def request_verification(request):
 def send_verification_email(email_address, verify_code):
     msg = EmailMessage(
         '忘記密碼-驗證碼驗證',
-        f'親愛的用戶您好，請您點擊以下連結進行安全驗證：http://127.0.0.1:8000/member/reset_confirm?code={verify_code}&email={email_address}，如您已登入成功，請您忽略此消息即可，謝謝。',
+        f'親愛的用戶您好，請您點擊以下連結進行安全驗證：http://127.0.0.1:8000/admin/api_member/reset_confirm?code={verify_code}&email={email_address}，如您已登入成功，請您忽略此消息即可，謝謝。',
         'forworkjayjay@gmail.com',
         [email_address]
     )
@@ -357,7 +358,6 @@ def reset_confirm(request):
             return JsonResponse({"status": "error", "message": str(e)})
 
     return render(request, 'member/reset_confirm.html')
-
 
 
 # 後台-用戶"修改信箱"  1.發送驗證信
@@ -530,7 +530,6 @@ def reconfirm_phone(request, token):
         return JsonResponse({'status': 'error', 'message': '無效的驗證連結。'})
 
 
-
 # 前台-首次註冊
 def signup(request):
     if request.method == "POST":
@@ -633,7 +632,6 @@ def verify_email(request, token):
     except MemberVerify.DoesNotExist:
         messages.error(request, "無效的驗證連結。")
         return redirect('member:signup')
-
 
 # 前台-用戶"修改信箱" 1.發送驗證信
 @csrf_exempt
@@ -881,4 +879,3 @@ def phone_change_form(request, code):
 
     except MemberVerify.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': '無效的驗證碼。'})
-

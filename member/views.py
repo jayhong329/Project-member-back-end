@@ -100,7 +100,7 @@ def delete(request, id):
     except MemberBasic.DoesNotExist:
         messages.error(request, "未找到指定的用戶。")
     except Exception as e:
-        messages.error(request, f"刪除過程發生錯誤：{str(e)}")
+        messages.error(request, f"刪除過程發生錯誤��{str(e)}")
 
     return redirect('member:index')
 
@@ -163,6 +163,9 @@ def phone_reconfirm(request, token):
     return render(request, "member/phone_reconfirm.html", {"title": "修改手機-發送驗證碼"})
 
 
+# 前台-用戶註冊
+def signup(request):
+    return render(request, "member/signup.html")
 
 # 前台-用戶登入
 def login(request):
@@ -233,10 +236,6 @@ def logout(request):
     
     return response
 
-# 前台-用戶註冊
-def signup(request):
-    return render(request, "member/signup.html")
-
 # 檢查用戶是否已登入
 def check_auth(request):
     session_key = request.COOKIES.get('user_session')
@@ -261,5 +260,8 @@ def dashboard(request):
     # 傳遞用戶信息到前端
     return render(request, "member/dashboard.html", {"user": user})
 
+# 前台-404頁面
+def page404(request):
+    return render(request, 'member/404.html', {"title": "找不到頁面"})
 
 

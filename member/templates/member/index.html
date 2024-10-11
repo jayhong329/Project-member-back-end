@@ -101,8 +101,8 @@
         }
         
         // 1.  call api 取得資料
-        const response = await fetch(`/api_member/search/?search=${encodeURIComponent(searchValue)}`);
-    const dataInfo = await response.json();
+        const response = await fetch(`/admin/api_member/search/?search=${encodeURIComponent(searchValue)}`);
+        const dataInfo = await response.json();
 
         searchResults.innerHTML = '';
 

@@ -8,7 +8,7 @@ use member_database;
 create table member_basic(
 user_id int primary key auto_increment,
 user_name varchar(20) not null unique,
-user_password varchar(128) not null default '1234qweasd',
+user_password varchar(128) not null,
 user_phone varchar(10) not null unique,
 user_email varchar(120) not null unique,
 user_nickname varchar(20) null,
@@ -20,7 +20,7 @@ user_avatar varchar(50) null default 'default.png',
 privacy_id int null,
 created_at timestamp default current_timestamp,
 updated_at timestamp default current_timestamp on update current_timestamp
--- foreign key (user_avatar) references member_photo(user_avatar)
+-- foreign key (user_avatar) references member_photo(user_avatar) ON DELETE CASCADE
 );
 
 insert into member_basic(user_name, user_password, user_phone, user_email, user_nickname, user_gender, user_birth)
@@ -46,14 +46,14 @@ user_id int not null,
 user_email varchar(120),
 privacy_name varchar(50) null,
 privacy_value boolean default '0',
-phone_change varchar(10) null,
-email_change varchar(50) null,
+phone_change varchar(10) null unique,
+email_change varchar(50) null unique,
 account_verify boolean default "0",
 activity_checked boolean default "0",
 double_verify boolean default "0",
 created_at timestamp default current_timestamp,
 updated_at timestamp default current_timestamp on update current_timestamp,
-foreign key (user_id) references member_basic(user_id)
+foreign key (user_id) references member_basic(user_id) ON DELETE CASCADE
 );
 
 insert into member_privacy(user_id, user_email)
@@ -81,8 +81,8 @@ verification_token varchar(16),
 code_used boolean default '0',
 token_used boolean default '0',
 created_at timestamp default current_timestamp,
-expires_at timestamp default current_timestamp on update current_timestamp,
-foreign key (user_id) references member_basic(user_id)
+expires_at timestamp default current_timestamp,
+foreign key (user_id) references member_basic(user_id) ON DELETE CASCADE
 ); 
 
 insert into member_verify(user_id, user_email)
@@ -100,10 +100,25 @@ values
 ('11','Monica@gmail.com');
 
 
+-- 9.Table auth_user
+create table auth_user(
+superuser_name varchar(50) primary key,
+superuser_email varchar(120) not null unique,
+superuser_password varchar(128) not null,
+created_at timestamp default current_timestamp,
+updated_at timestamp default current_timestamp on update current_timestamp
+);
+select * from auth_user;
+insert into auth_user(superuser_name, superuser_email,superuser_password)
+values
+('superuser','superuser@gmail.com', '1234qwer'),
+('admin','admin@gmail.com', '1234qwer');
+
+-- drop table auth_user;
+
 -- 目前未使用的table
 -- 2.Table member_login
 -- 4.Table member_favorite
 -- 5.Table member_photo
 -- 6.Table member_orderdetails (尚未建立)
 -- 7.Table member_coupon (尚未建立)
-

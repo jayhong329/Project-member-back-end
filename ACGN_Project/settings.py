@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'Example_APP',
     'member',
     'api_member',
+    'admins',
+    'api_admin',
 ]
 
 

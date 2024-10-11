@@ -34,9 +34,15 @@
 							{% csrf_token %}
 							{% if messages %}
 							    {% for message in messages %}
-							        <div class="alert alert-danger" role="alert">
-							            {{ message }}
-							        </div>
+							        {% if message.tags == 'error' or message.tags == 'warning' %}
+							            <div class="alert alert-danger" role="alert">
+							                {{ message }}
+							            </div>
+							        {% else %}
+							            <div class="alert alert-success" role="alert">
+							                {{ message }}
+							            </div>
+							        {% endif %}
 							    {% endfor %}
 							{% endif %}
 							<div class="email mb-3">
@@ -67,12 +73,6 @@
 							</div>
 						</form>
 						
-						{% if message %}
-						<div class="auth-message mt-3">
-							<div class="alert alert-info">{{ message }}</div>
-						</div>
-						{% endif %}
-						
 						<div class="auth-option text-center pt-5">沒有帳號? <a class="text-link" href="{% url 'member:signup' %}" > Sign up／註冊</a></div>
 					</div><!--//auth-form-container-->	
 
@@ -87,7 +87,7 @@
 			    </footer><!--//app-auth-footer-->	
 		    </div><!--//flex-column-->   
 	    </div><!--//auth-main-col-->
-	    <div class="col-12 col-md-5 col-lg-6 h-100 auth-background-col" style="background-image: url('{% static 'member/images/background-1.jpg' %}'); background-size: cover;">
+	    <div class="col-12 col-md-5 col-lg-6 h-100 auth-background-col" style="background-image: url('{% static 'member/images/background-green.jpg' %}'); background-size: cover;">
 		    <div class="auth-background-holder">
 		    </div>
 		    <div class="auth-background-mask"></div>
@@ -104,7 +104,5 @@
     
     </div><!--//row-->
 
-
 </body>
-</html> 
-
+</html>

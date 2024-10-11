@@ -6,8 +6,11 @@ from . import views
 
 app_name = 'member'
 urlpatterns = [
-    # http://127.0.0.1:8000/member/
+    # http://127.0.0.1:8000/admin/member/
     path('', views.index, name="index" ),
+    # http://127.0.0.1:8000/admin/member/404
+    path('404/', views.page404, name="404" ),
+
     # http://127.0.0.1:8000/member/register
     path('register/', views.register, name="create" ),
     # http://127.0.0.1:8000/member/edit/

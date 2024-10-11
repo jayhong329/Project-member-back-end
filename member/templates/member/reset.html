@@ -21,6 +21,22 @@
     <!-- App CSS -->  
     <link id="theme-style" rel="stylesheet" href="{% static 'member/styles/portal.css' %}">
 	
+    <style>
+        .success-message {
+            background-color: #d4edda; /* 綠色背景 */
+            color: #155724; /* 深綠色文字 */
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .error-message {
+            background-color: #f8d7da; /* 紅色背景 */
+            color: #721c24; /* 深紅色文字 */
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+    </style>
 </head> 
 
 <body class="app app-reset p-0">    	
@@ -89,7 +105,7 @@
 			const responseMessage = document.querySelector("#response-message");
 
 			try {
-				const response = await fetch('/api_member/request-verification/', {
+				const response = await fetch('/admin/api_member/request-verification/', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/x-www-form-urlencoded',
@@ -104,16 +120,13 @@
 				responseMessage.innerText = data.message;
 
 				if (response.ok) {
-					responseMessage.style.color = 'green';
-					console.log("驗證信已發送");
+					responseMessage.className = 'success-message';
 				} else {
-					responseMessage.style.color = 'red';
-					console.error("發送失敗:", data.message);
+					responseMessage.className = 'error-message';
 				}
 			} catch (error) {
-				console.error("錯誤:", error);
 				responseMessage.innerText = "發生錯誤，請稍後重試。";
-				responseMessage.style.color = 'red';
+				responseMessage.className = 'error-message';
 			}
 		});
 	</script>

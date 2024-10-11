@@ -292,8 +292,6 @@
             }
 
             const data = await response.json();
-            console.log('伺服器回應:', data);
-
             if (data.status === 'success') {
                 // 更新狀態與文字
                 accountOn.checked = data.account_verify;
@@ -301,21 +299,22 @@
                 activateOn.checked = data.activity_checked;
                 checkActivate.innerText = data.activation_message;
 
+                // 新增的 alert 提示
+                alert('更新成功！');
+                
                 console.log('更新後狀態:', {
                     accountOn: accountOn.checked,
                     activateOn: activateOn.checked
                 });
             } else {
-                console.error('錯誤:', data.message);
-                alert('更新成功: ' + data.message);
+                alert('更新失敗: ' + data.message);
             }
         } catch (error) {
-            console.error("請求錯誤:", error);
             alert('發生錯誤: ' + error.message);
         }
     });
 
-    // 修改重置密码按钮的事件监听器
+    // 修改重置密碼的事件監聽器
     resetPasswordBtn.addEventListener('click', async function(e) {
         e.preventDefault();
         const confirmed = confirm('即將發送-忘記密碼驗證連結，請提醒用戶留意郵箱。~');
@@ -324,10 +323,8 @@
             try {
                 const response = await fetch(url);
                 const data = await response.json();
-                console.log('伺服器回應:', data);
                 alert(data.message); 
             } catch (error) {
-                console.error('錯誤:', error);
                 alert('發生錯誤，請稍後重試。');
             }
         }

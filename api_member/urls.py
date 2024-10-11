@@ -1,10 +1,12 @@
 from django.urls import path
-from . import views
+from . import views  # 導入視圖
 
 app_name = "api_member"
 urlpatterns = [
-    # http://127.0.0.1:8000/api_member/
+    # http://127.0.0.1:8000/admin/api_member/
     path('', views.index, name="index"),
+
+
     # http://127.0.0.1:8000/api_member/register
     path('register/', views.register),
     # http://127.0.0.1:8000/api_member/checkname/
@@ -16,7 +18,7 @@ urlpatterns = [
     # http://127.0.0.1:8000/api_member/checkpassword/
     path('checkpassword/', views.checkpassword ),
     # http://127.0.0.1:8000/api_member/search/
-    path('search/', views.search, name="search" ),
+    path('search/', views.search, name='search' ),
     # http://127.0.0.1:8000/api_member/signup
     path('signup/', views.signup, name='signup'),
         # http://127.0.0.1:8000/api_member/personal/
@@ -57,12 +59,10 @@ urlpatterns = [
     path('reconfirm_phone/<str:token>/', views.reconfirm_phone, name='reconfirm_phone'),
 
 
-
     # http://127.0.0.1:8000/api_member/phone_change/
     path('phone_change/', views.phone_change, name='phone_change'),
     # http://127.0.0.1:8000/api_member/phone_change_confirm/<str:token>/
     path('phone_change_confirm/<str:token>/', views.phone_change_confirm, name='phone_change_confirm'),
     # http://127.0.0.1:8000/api_member/phone_change_form/<str:code>/
     path('phone_change_form/<str:code>/', views.phone_change_form, name='phone_change_form'),
-
 ]

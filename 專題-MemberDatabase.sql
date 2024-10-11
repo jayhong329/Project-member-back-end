@@ -8,7 +8,7 @@ use member_database;
 create table member_basic(
 user_id int primary key auto_increment,
 user_name varchar(20) not null unique,
-user_password varchar(128) not null default '1234qweasd',
+user_password varchar(128) not null,
 user_phone varchar(10) not null unique,
 user_email varchar(120) not null unique,
 user_nickname varchar(20) null,
@@ -20,7 +20,7 @@ user_avatar varchar(50) null default 'default.png',
 privacy_id int null,
 created_at timestamp default current_timestamp,
 updated_at timestamp default current_timestamp on update current_timestamp
--- foreign key (user_avatar) references member_photo(user_avatar)
+-- foreign key (user_avatar) references member_photo(user_avatar) ON DELETE CASCADE
 );
 
 insert into member_basic(user_name, user_password, user_phone, user_email, user_nickname, user_gender, user_birth)
@@ -48,7 +48,7 @@ provider_id_fb varchar(50) null unique,
 access_token varchar(50) null unique,
 created_at timestamp default current_timestamp,
 updated_at timestamp default current_timestamp on update current_timestamp,
-foreign key (user_id) references member_basic(user_id)
+foreign key (user_id) references member_basic(user_id) ON DELETE CASCADE
 );
 select * from member_login;
 
@@ -59,14 +59,14 @@ user_id int not null,
 user_email varchar(120),
 privacy_name varchar(50) null,
 privacy_value boolean default '0',
-phone_change varchar(10) null,
-email_change varchar(50) null,
+phone_change varchar(10) null unique,
+email_change varchar(50) null unique,
 account_verify boolean default "0",
 activity_checked boolean default "0",
 double_verify boolean default "0",
 created_at timestamp default current_timestamp,
 updated_at timestamp default current_timestamp on update current_timestamp,
-foreign key (user_id) references member_basic(user_id)
+foreign key (user_id) references member_basic(user_id) ON DELETE CASCADE
 );
 select * from member_privacy;
 insert into member_privacy(user_id, user_email)
@@ -100,7 +100,7 @@ user_avatar varchar(50) primary key,
 user_id int not null,
 image_url varchar(128) null,
 updated_at timestamp default current_timestamp on update current_timestamp,
-foreign key (user_id) references member_basic(user_id)
+foreign key (user_id) references member_basic(user_id) ON DELETE CASCADE
 );
 select * from member_photo;
 
@@ -110,7 +110,7 @@ user_id int primary key,
 orderNumber int not null,
 created_at timestamp default current_timestamp,
 updated_at timestamp default current_timestamp on update current_timestamp
--- foreign key (orderNumber) references orderdetails(orderNumber)
+-- foreign key (orderNumber) references orderdetails(orderNumber) ON DELETE CASCADE
 );
 select * from member_orderdetails;
 
@@ -120,7 +120,7 @@ user_id int primary key,
 coupon_id int not null,
 created_at timestamp default current_timestamp,
 updated_at timestamp default current_timestamp on update current_timestamp
--- foreign key (coupon_id) references orderdetails(coupon_id)
+-- foreign key (coupon_id) references orderdetails(coupon_id) ON DELETE CASCADE
 );
 select * from member_coupon;
 
@@ -135,8 +135,8 @@ verification_token varchar(16),
 code_used boolean default '0',
 token_used boolean default '0',
 created_at timestamp default current_timestamp,
-expires_at timestamp default current_timestamp on update current_timestamp,
-foreign key (user_id) references member_basic(user_id)
+expires_at timestamp default current_timestamp,
+foreign key (user_id) references member_basic(user_id) ON DELETE CASCADE
 ); 
 select * from member_verify;
 

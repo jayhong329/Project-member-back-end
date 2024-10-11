@@ -9,6 +9,19 @@ from django.db import models
 from django.utils import timezone
 
 
+class AuthUser(models.Model):
+    superuser_id = models.AutoField(primary_key=True)
+    superuser_name = models.CharField(unique=True, max_length=50)
+    superuser_email = models.CharField(unique=True, max_length=120)
+    superuser_password = models.CharField(max_length=128)
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_user'
+
+
 class MemberBasic(models.Model):
     user_id = models.AutoField(primary_key=True)
     user_name = models.CharField(unique=True, max_length=20)
@@ -23,7 +36,7 @@ class MemberBasic(models.Model):
     user_avatar = models.CharField(max_length=50, blank=True, null=True)
     privacy_id = models.IntegerField(blank=True, null=True)
     created_at = models.DateTimeField(blank=True, null=True)
-    updated_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -34,7 +47,7 @@ class MemberCoupon(models.Model):
     user_id = models.IntegerField(primary_key=True)
     coupon_id = models.IntegerField()
     created_at = models.DateTimeField(blank=True, null=True)
-    updated_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -46,7 +59,7 @@ class MemberFavorite(models.Model):
     user = models.ForeignKey(MemberBasic, models.DO_NOTHING)
     type_name = models.CharField(max_length=50, blank=True, null=True)
     created_at = models.DateTimeField(blank=True, null=True)
-    updated_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -62,7 +75,7 @@ class MemberLogin(models.Model):
     provider_id_fb = models.CharField(unique=True, max_length=50, blank=True, null=True)
     access_token = models.CharField(unique=True, max_length=50, blank=True, null=True)
     created_at = models.DateTimeField(blank=True, null=True)
-    updated_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -73,7 +86,7 @@ class MemberOrderdetails(models.Model):
     user_id = models.IntegerField(primary_key=True)
     ordernumber = models.IntegerField(db_column='orderNumber')  # Field name made lowercase.
     created_at = models.DateTimeField(blank=True, null=True)
-    updated_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -84,7 +97,7 @@ class MemberPhoto(models.Model):
     user_avatar = models.CharField(primary_key=True, max_length=50)
     user = models.ForeignKey(MemberBasic, models.DO_NOTHING)
     image_url = models.CharField(max_length=128, blank=True, null=True)
-    updated_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -103,7 +116,7 @@ class MemberPrivacy(models.Model):
     activity_checked = models.BooleanField(default=False)
     double_verify = models.BooleanField(default=False)
     created_at = models.DateTimeField(blank=True, null=True)
-    updated_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     class Meta:
         managed = False

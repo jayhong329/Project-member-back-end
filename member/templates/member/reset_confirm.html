@@ -89,11 +89,11 @@
     </div><!--//row-->
 
 	<script>
-		const inputPassword = document.getElementById('InputPassword');
-		const passwordCheck = document.getElementById('PasswordCheck');
-		const passwordHelp = document.getElementById('passwordHelp');
-		const resetPasswordForm = document.getElementById('resetPasswordForm');
-		const messageDiv = document.getElementById('message');
+		const inputPassword = document.querySelector('#InputPassword');
+		const passwordCheck = document.querySelector('#PasswordCheck');
+		const passwordHelp = document.querySelector('#passwordHelp');
+		const resetPasswordForm = document.querySelector('#resetPasswordForm');
+		const messageDiv = document.querySelector('#message');
 
 		function checkPasswordMatch() {
 			if (inputPassword.value !== passwordCheck.value) {
@@ -108,16 +108,33 @@
 			}
 		}
 
+		function isValidPassword(password) {
+			// 檢查密碼長度
+			if (password.length < 8) {
+				return false;
+			}
+			// 檢查是否包含至少一個字母和一個數字
+			const hasLetter = /[a-zA-Z]/.test(password);
+			const hasNumber = /\d/.test(password);
+			return hasLetter && hasNumber;
+		}
+
 		inputPassword.addEventListener('input', checkPasswordMatch);
 		passwordCheck.addEventListener('input', checkPasswordMatch);
 
-		resetPasswordForm.addEventListener('submit', function(e) {
+		resetPasswordForm.addEventListener('submit', async function(e) {
 			e.preventDefault();
 			
 			const password = inputPassword.value;
 			const confirmPassword = passwordCheck.value;
-			const code = document.getElementById('codeInput').value;
-			const email = document.getElementById('emailInput').value;
+			const code = document.querySelector('#codeInput').value;
+			const email = document.querySelector('#emailInput').value;
+
+			if (!isValidPassword(password)) {
+				passwordHelp.textContent = '密碼必須至少8個字符，並包含字母和數字。';
+				passwordHelp.style.display = 'block';
+				return;
+			}
 
 			if (password !== confirmPassword) {
 				passwordHelp.textContent = '密碼不一致，請重新輸入。';
@@ -125,21 +142,22 @@
 				return;
 			}
 
-			fetch('{% url "api_member:reset_confirm" %}', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'X-CSRFToken': '{{ csrf_token }}'
-				},
-				body: JSON.stringify({
-					password: password,
-					password1: confirmPassword,
-					code: code,
-					email: email
-				})
-			})
-			.then(response => response.json())
-			.then(data => {
+			try {
+				const response = await fetch('{% url "api_member:reset_confirm" %}', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'X-CSRFToken': '{{ csrf_token }}'
+					},
+					body: JSON.stringify({
+						password: password,
+						password1: confirmPassword,
+						code: code,
+						email: email
+					})
+				});
+
+				const data = await response.json();
 				messageDiv.textContent = data.message;
 				messageDiv.style.display = 'block';
 				messageDiv.className = 'alert ' + (data.status === 'success' ? 'alert-success' : 'alert-danger');
@@ -149,13 +167,12 @@
 						window.location.href = '{% url "member:login" %}';
 					}, 5000);
 				}
-			})
-			.catch(error => {
+			} catch (error) {
 				console.error('Error:', error);
 				messageDiv.textContent = '發生錯誤，請稍後再試。';
 				messageDiv.style.display = 'block';
 				messageDiv.className = 'alert alert-danger';
-			});
+			}
 		});
 	</script>
 </body>
