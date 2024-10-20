@@ -4,9 +4,11 @@ from . import views  # 導入視圖
 app_name = "admins"
 urlpatterns = [
     # 後台 管理者- 登入 首頁 
-    # http://127.0.0.1:8000/admin/
-    path('login/', views.login, name='login'),
-    path('', views.index, name="index"),
+    # http://127.0.0.1:8000/admin
+    path('', views.login, name="login"),
+    # http://127.0.0.1:8000/admin/index
+    path('index', views.index, name="index"),
+
 
     # 後台 管理者- 登出 註冊 重置密碼 
     # http://127.0.0.1:8000/admin/logout

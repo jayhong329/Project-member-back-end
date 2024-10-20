@@ -30,7 +30,7 @@
 				    <div class="app-auth-branding mb-4"><a class="app-logo" href="{% url 'admins:login' %}"><img class="logo-icon me-2" src="{% static 'member/images/app-logo.svg' %}" alt="logo"></a></div>
 					<h2 class="auth-heading text-center mb-5">Log in／後台管理頁面</h2>
 			        <div class="auth-form-container text-start">
-						<form class="auth-form login-form" method="post" enctype="multipart/form-data" action="{% url 'api_admin:login' %}">
+						<form class="auth-form login-form" method="post" enctype="multipart/form-data" action="{% url 'admins:login' %}">
 							{% csrf_token %}
 							{% if messages %}
 							    {% for message in messages %}
